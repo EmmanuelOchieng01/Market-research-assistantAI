@@ -1,81 +1,111 @@
 # AI Market Research Assistant
 
-An intelligent system for scraping, analyzing, and summarizing global commodity and agriculture news using Natural Language Processing and sentiment analysis.
+An automated intelligence system that collects, structures, and summarises global commodity and agriculture news using NLP and sentiment analysis. Converts unstructured news data into organised market insights that support strategic decision-making.
 
-## Problem Definition
+---
 
-Global commodity and agriculture markets move fast, generating massive volumes of news and reports every hour. Analysts, traders, and agribusiness leaders struggle to keep up — manually scanning articles, reports, and market updates is slow, inconsistent, and prone to bias. Valuable insights are often missed simply because there’s too much information to process in real time.
+## What it does
 
-The AI Market Research Assistant solves this problem by using Natural Language Processing (NLP) to scrape, analyze, and summarize market news from multiple sources. It applies sentiment analysis and entity recognition to extract trends, company mentions, and commodity insights — transforming raw information into actionable intelligence through automated reports and an interactive dashboard.
+The system scrapes articles from multiple public RSS feeds, runs every article through a full NLP pipeline, and presents the results in an interactive dashboard. A loan officer, commodity trader, or agribusiness analyst can open it and immediately understand market sentiment across 13 commodities — without reading a single article manually.
 
-## Features
+**Built to demonstrate:** Automated research workflows, NLP in business intelligence, full-stack development, and practical AI application in financial and agricultural contexts.
 
-- Multi-source web scraping from RSS feeds
-- Automated article summarization using NLP
-- Real-time sentiment analysis (positive/negative/neutral)
-- Named Entity Recognition for commodities, companies, and locations
-- Trend detection and keyword extraction
-- Automated daily/weekly market digest reports
-- Interactive web dashboard with charts and filtering
-- SQLite database for efficient article storage
+---
 
-## Technology Stack
+## Core capabilities
 
-**Backend:**
-- Flask - Web framework
-- BeautifulSoup4 - HTML parsing
-- Feedparser - RSS feed processing
-- NLTK - Natural language processing
-- VADER - Sentiment analysis
+**News Scraper** — Fetches articles from Reuters, Yahoo Finance, CNBC, AgWeb, Farm Journal, Nasdaq, MarketWatch, and Investing.com. No API keys required. All public RSS feeds.
 
-**Frontend:**
-- HTML5/CSS3/JavaScript
-- Plotly.js - Interactive charts
-- Responsive design
+**NLP Pipeline** — Extracts keywords, detects commodity mentions, identifies named entities (companies, people, locations), and generates extractive summaries. Works on any input length — a single word, a phrase, or a full article.
 
-**Database:**
-- SQLite - Article storage and retrieval
+**Sentiment Analysis** — VADER-based scoring. Every article is classified as positive, negative, or neutral with a confidence score. Commodity-level sentiment trends show whether market mood is bullish, bearish, or neutral.
 
-## Installation
+**Analyse Any Text** — Paste anything into the analysis panel. A single word like "corn" returns commodity detection. A phrase like "wheat prices falling" returns sentiment and keywords. A full article returns summary, entities, sentiment breakdown, and related articles from the database.
+
+**Market Digest** — One-click executive report covering the last 24 hours, 48 hours, or 7 days. Shows top stories, overall market trend, commodity sentiment breakdown, and source distribution. Downloadable as a standalone HTML file you can send to a client or manager.
+
+**SQLite Database** — All articles stored locally. Filterable by sentiment, commodity, source, and keyword search.
+
+---
+
+## Commodities tracked
+
+Corn, Wheat, Soybeans, Rice, Coffee, Cotton, Sugar, Cocoa, Cattle, Hogs, Gold, Oil, Copper
+
+---
+
+## Launch Procedure
+
+Requirements: Python 3.8+
 
 ```bash
+git clone https://github.com/EmmanuelOchieng01/Market-research-assistantAI
+cd Market-research-assistantAI
 pip install -r requirements.txt
-python src/download_models.py
+python setup.py
 python app.py
 ```
 
-Visit `http://localhost:5000` to access the dashboard.
+Open your browser at **http://localhost:5000**
 
-## Usage
+First launch: `setup.py` downloads NLTK language models and initialises the database. Takes about 30 seconds. Run it only once.
 
-1. Click "Scrape News" to fetch latest articles from configured sources
-2. View articles with sentiment scores and summaries
-3. Filter by sentiment (positive/negative/neutral) or date range
-4. Generate market digest reports with key insights
-5. Analyze custom text using the NLP pipeline
+---
 
-## Project Structure
+## How to use it
+
+1. Open the **Dashboard** tab
+2. Click **Fetch Latest News** — the scraper pulls articles from all sources
+3. Watch the sentiment charts and commodity trend bars populate automatically
+4. Go to **Articles** to browse, filter, and search all fetched articles
+5. Go to **Analyse Text** — type or paste anything and click Run Analysis
+6. Go to **Market Digest** — click Generate Digest for an executive summary report, then Download HTML to save it
+
+---
+
+## Project structure
 
 ```
-ai_market_research/
-├── app.py                    # Main Flask application
-├── config.py                 # Configuration settings
-├── requirements.txt          # Python dependencies
+├── app.py                      # Flask server and all API endpoints
+├── setup.py                    # One-time NLTK download and DB init
+├── config.py                   # RSS feeds, commodities, NLP settings
+├── requirements.txt
 ├── src/
-│   ├── scraper.py           # Web scraping logic
-│   ├── nlp_processor.py     # Text processing
-│   ├── summarizer.py        # Article summarization
-│   ├── sentiment.py         # Sentiment analysis
-│   ├── entity_extractor.py  # Named entity recognition
-│   ├── digest_generator.py  # Report generation
-│   └── database.py          # Database operations
+│   ├── database.py             # SQLite operations
+│   ├── scraper.py              # RSS feed fetcher
+│   ├── nlp_processor.py        # Keywords, entities, commodity detection
+│   ├── summarizer.py           # Extractive summarization
+│   ├── sentiment.py            # VADER sentiment analysis
+│   ├── entity_extractor.py     # Entity extraction wrapper
+│   └── digest_generator.py     # Market digest report builder
 ├── templates/
-│   └── index.html           # Web interface
-└── static/
-    ├── css/style.css        # Styling
-    └── js/app.js            # Frontend logic
+│   └── index.html              # Full dashboard
+├── static/
+│   ├── css/style.css
+│   └── js/app.js
+└── data/
+    └── articles.db             # Auto-created on first run
 ```
 
-## License
+---
 
-MIT License
+## Tech stack
+
+**Backend** — Python, Flask, NLTK, VADER Sentiment, BeautifulSoup4, Feedparser
+
+**Frontend** — HTML, CSS, JavaScript, Plotly.js
+
+**Database** — SQLite
+
+**NLP** — VADER (sentiment), NLTK (tokenization, POS tagging, NER), extractive summarization
+
+---
+
+## Author
+
+**Emmanuel Ochieng**
+GitHub: https://github.com/EmmanuelOchieng01
+
+---
+
+*For educational and portfolio purposes. Not investment advice.*

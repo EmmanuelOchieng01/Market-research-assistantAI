@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Market Research Assistant</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header>
+  <div>
+    <div class="logo">Market<span>IQ</span></div>
+    <div class="tagline">AI-Powered Commodity Intelligence · NLP · Sentiment Analysis · Real-Time News</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <div class="stat-pill" id="hp-total">— articles</div>
+    <div class="header-badge">v1.0</div>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav>
+  <button class="nav-btn active" onclick="showTab('dashboard')">Dashboard</button>
+  <button class="nav-btn"        onclick="showTab('articles')">Articles</button>
+  <button class="nav-btn"        onclick="showTab('analyse')">Analyse Text</button>
+  <button class="nav-btn"        onclick="showTab('digest')">Market Digest</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1 — DASHBOARD
+══════════════════════════════════════════════ -->
+<div id="tab-dashboard" class="tab-content active">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Market Intelligence Dashboard</div>
+      <div class="page-sub">Live sentiment and commodity trend analysis from global news sources</div>
+    </div>
+    <button class="btn-primary" onclick="scrapeNews()" id="btn-scrape">Fetch Latest News</button>
+  </div>
+
+  <div id="scrape-status" class="status-bar" style="display:none;"></div>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip" id="kpi-strip">
+    <div class="kpi"><div class="kpi-label">Total Articles</div><div class="kpi-val" id="kpi-total">—</div></div>
+    <div class="kpi"><div class="kpi-label">Positive</div><div class="kpi-val green" id="kpi-pos">—</div></div>
+    <div class="kpi"><div class="kpi-label">Negative</div><div class="kpi-val red"   id="kpi-neg">—</div></div>
+    <div class="kpi"><div class="kpi-label">Neutral</div><div class="kpi-val gold"  id="kpi-neu">—</div></div>
+    <div class="kpi"><div class="kpi-label">Sources</div><div class="kpi-val"        id="kpi-src">—</div></div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="sl">Sentiment Distribution</div>
+      <div class="chart-box"><div id="chart-sentiment" style="height:260px;"></div></div>
+      <div class="sl" style="margin-top:1.5rem;">Top Commodities by Mentions</div>
+      <div class="chart-box"><div id="chart-commodities" style="height:280px;"></div></div>
+    </div>
+    <div>
+      <div class="sl">Commodity Sentiment Trends</div>
+      <div class="chart-box" id="commodity-trends-box" style="padding:0.5rem;">
+        <div id="commodity-trends"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 — ARTICLES
+══════════════════════════════════════════════ -->
+<div id="tab-articles" class="tab-content">
+  <div class="page-header">
+    <div>
+      <div class="page-title">News Articles</div>
+      <div class="page-sub">Filter, search, and explore all fetched articles</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <input type="text" id="f-search" placeholder="Search titles, summaries..." oninput="loadArticles()">
+    <select id="f-sentiment" onchange="loadArticles()">
+      <option value="all">All Sentiment</option>
+      <option value="positive">Positive</option>
+      <option value="negative">Negative</option>
+      <option value="neutral">Neutral</option>
+    </select>
+    <select id="f-commodity" onchange="loadArticles()">
+      <option value="all">All Commodities</option>
+    </select>
+    <select id="f-source" onchange="loadArticles()">
+      <option value="all">All Sources</option>
+    </select>
+    <select id="f-limit" onchange="loadArticles()">
+      <option value="50">50 articles</option>
+      <option value="100">100 articles</option>
+      <option value="200">200 articles</option>
+    </select>
+  </div>
+
+  <div id="article-count" class="article-count"></div>
+  <div id="articles-list"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 — ANALYSE TEXT
+══════════════════════════════════════════════ -->
+<div id="tab-analyse" class="tab-content">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Analyse Any Text</div>
+      <div class="page-sub">Enter a word, phrase, or full article — the AI pipeline analyses everything</div>
+    </div>
+  </div>
+
+  <div class="analyse-layout">
+    <div class="analyse-input-col">
+      <div class="sl">Input</div>
+      <textarea id="analyse-input" placeholder="Type anything — a single word like 'wheat', a phrase like 'corn prices rising', or paste a full news article..."></textarea>
+      <div class="example-pills">
+        <span class="ex-pill" onclick="setExample('corn')">corn</span>
+        <span class="ex-pill" onclick="setExample('wheat prices falling')">wheat prices falling</span>
+        <span class="ex-pill" onclick="setExample('coffee exports surge amid supply concerns')">coffee exports surge</span>
+        <span class="ex-pill" onclick="setExample('Global oil markets face uncertainty as OPEC cuts production targets for 2025 amid weakening demand from major economies.')">full sentence</span>
+      </div>
+      <button class="btn-primary" onclick="analyseText()" style="margin-top:1rem;">Run Analysis</button>
+      <div id="analyse-loading" class="loading" style="margin-top:0.75rem;">Analysing...</div>
+    </div>
+
+    <div class="analyse-result-col" id="analyse-results" style="display:none;">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 — MARKET DIGEST
+══════════════════════════════════════════════ -->
+<div id="tab-digest" class="tab-content">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Market Digest</div>
+      <div class="page-sub">Auto-generated executive report from recent articles</div>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:center;">
+      <select id="digest-hours" style="background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:0.5rem 0.75rem;border-radius:7px;font-family:'DM Mono',monospace;font-size:0.78rem;">
+        <option value="24">Last 24 hours</option>
+        <option value="48">Last 48 hours</option>
+        <option value="168">Last 7 days</option>
+        <option value="720">Last 30 days</option>
+      </select>
+      <button class="btn-primary" onclick="generateDigest()">Generate Digest</button>
+      <button class="btn-secondary" onclick="downloadDigest()">Download HTML</button>
+    </div>
+  </div>
+
+  <div id="digest-loading" class="loading" style="margin-bottom:1rem;">Generating digest...</div>
+  <div id="digest-content" style="display:none;">
+    <div class="digest-header" id="digest-header"></div>
+    <div class="two-col" style="margin-top:1.5rem;">
+      <div>
+        <div class="sl">Top Stories</div>
+        <div id="digest-stories"></div>
+      </div>
+      <div>
+        <div class="sl">Commodity Sentiment</div>
+        <div id="digest-commodities"></div>
+        <div class="sl" style="margin-top:1.5rem;">Sentiment Distribution</div>
+        <div id="digest-dist"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  MarketIQ &nbsp;·&nbsp; AI Market Research Assistant &nbsp;·&nbsp; For informational purposes only &nbsp;·&nbsp; Not investment advice
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
