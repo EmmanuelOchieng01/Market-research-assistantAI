@@ -36,6 +36,17 @@ Corn, Wheat, Soybeans, Rice, Coffee, Cotton, Sugar, Cocoa, Cattle, Hogs, Gold, O
 
 ---
 
+## System Screenshots 
+
+# Home Screen 
+
+<img width="1554" height="658" alt="Screenshot From 2026-03-24 12-59-47" src="https://github.com/user-attachments/assets/db79fbe9-3029-4d54-86f0-f66103870692" />
+
+# Text Analysis
+
+<img width="1554" height="658" alt="Screenshot From 2026-03-24 13-00-49" src="https://github.com/user-attachments/assets/2e6c027d-e7da-477b-a6bf-d8656789a987" />
+
+
 ## Launch Procedure
 
 Requirements: Python 3.8+
